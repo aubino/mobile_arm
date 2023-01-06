@@ -40,6 +40,10 @@
     </collision>
   </link>
 
+<!--link name="base_footprint">
+   </link-->
+
+
 
 <link name="front_left_wheel">
     <inertial>
@@ -222,6 +226,14 @@
     <child link ="rear_right_wheel"/>
     <origin rpy ="0 0 0" xyz= "-0.220 -0.250 0"/>
 </joint>
+
+<!--joint name="base_footprint" type="fixed">
+     <parent link="base_footprint"/>
+     <child link="base_link"/>
+</joint-->
+
+
+
 <!--############################## ARM ########################################-->
 
  <link name="arm_base">

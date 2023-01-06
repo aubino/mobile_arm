@@ -5,10 +5,10 @@
   <link name="base_link">
     <inertial>
       <origin
-        xyz="0.0030946 4.78250032638821E-11 0.053305"
+        xyz="0.000001 0.000001 0.05"
         rpy="0 0 0" />
       <mass
-        value="47.873" />
+        value="48.0" />
       <inertia
         ixx="0.774276574699151"
         ixy="-1.03781944357671E-10"
@@ -453,6 +453,182 @@
   <origin rpy="0 0 0" xyz="0.0 0 0.20994"/>
 </joint>
 
+<!--########################## SENSORS ############################################-->
+
+<link name="laser_link">
+  <collision>
+   <origin xyz="0 0 0" rpy="0 0 0"/>
+   <geometry>
+    <box size="0.1 0.1 0.1"/>
+   </geometry>
+  </collision>
+  <visual>
+   <origin xyz="0 0 0" rpy="0 0 0"/>
+    <geometry>
+     <box size="0.05 0.05 0.05"/>
+    </geometry>
+  </visual>
+  <inertial>
+    <mass value="1e-5" />
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+    <inertia ixx="1e-6" ixy="0" ixz="0" iyy="1e-6" iyz="0" izz="1e-6" />
+  </inertial>
+</link>
+
+<joint name="laser_joint" type="fixed">
+  <axis xyz="0 1 0" />
+  <origin xyz="0.350 0 0.115" rpy="0 0 0"/>
+  <parent link="base_link"/>
+  <child link="laser_link"/>
+</joint>
+
+<gazebo reference="laser_link">
+  <sensor type="ray" name="laser">
+    <pose>0 0 0 0 0 0</pose>
+    <visualize>true</visualize>
+    <update_rate>40</update_rate>
+    <ray>
+    <scan>
+    <horizontal>
+      <samples>720</samples>
+      <resolution>1</resolution>
+      <min_angle>-3.14159</min_angle>
+      <max_angle>3.14159</max_angle>
+    </horizontal>
+    </scan>
+    <range>
+    <min>0.10</min>
+    <max>30.0</max>
+    <resolution>0.01</resolution>
+    </range>
+    </ray>
+    <plugin name="gazebo_ros_head_hokuyo_controller" filename="libgazebo_ros_laser.so">
+      <topicName>/scan</topicName>
+      <frameName>laser_link</frameName>
+    </plugin>
+  </sensor>
+</gazebo>
+
+<link name="imu_link">
+  <inertial>
+    <mass value="0.001"/>
+    <origin rpy="0 0 0" xyz="0 0 0"/>
+    <inertia ixx="0.0001" ixy="0" ixz="0" iyy="0.000001" iyz="0" izz="0.0001"/>
+  </inertial>
+  <visual>
+    <origin rpy="0 0 0" xyz="0 0 0"/>
+    <geometry>
+      <box size="0.001 0.001 0.001"/>
+    </geometry>
+  </visual>
+  <collision>
+    <origin rpy="0 0 0" xyz="0 0 0"/>
+    <geometry>
+      <box size=".001 .001 .001"/>
+    </geometry>
+  </collision>
+</link>
+
+<joint name="imu_joint" type="fixed">
+  <axis xyz="1 0 0"/> <!-- 0 1 0 -->
+    <origin xyz="-0.350 0 0.115"/>
+    <parent link="base_link"/>
+    <child link="imu_link"/>
+</joint>
+
+  <gazebo reference="imu_link">
+    <gravity>true</gravity>
+    <sensor name="imu_sensor" type="imu">
+      <always_on>true</always_on>
+      <update_rate>100</update_rate>
+      <visualize>true</visualize>
+      <topic>__default_topic__</topic>
+      <plugin filename="libgazebo_ros_imu_sensor.so" name="imu_plugin">
+        <topicName>imu_data</topicName>
+        <bodyName>imu_link</bodyName>
+        <updateRateHZ>10.0</updateRateHZ>
+        <gaussianNoise>0.0</gaussianNoise>
+        <xyzOffset>0 0 0</xyzOffset>
+        <rpyOffset>0 0 0</rpyOffset>
+        <frameName>imu_link</frameName>
+        <initialOrientationAsReference>false</initialOrientationAsReference>
+      </plugin>
+      <pose>0 0 0 0 0 0</pose>
+    </sensor>
+  </gazebo>
+
+ <joint name="camera_joint" type="fixed">
+    <axis xyz="0 1 0" />
+    <origin xyz="0.25 0 0.185" rpy="0 0 0"/>
+    <parent link="base_link"/>
+    <child link="camera_link"/>
+  </joint>
+
+  <!-- Camera -->
+  <link name="camera_link">
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+    <box size="0.05 0.05 0.05"/>
+      </geometry>
+    </collision>
+
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+    <box size="0.05 0.05 0.05"/>
+      </geometry>
+      <!--material name="red"/-->
+    </visual>
+
+    <inertial>
+      <mass value="1e-5" />
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <inertia ixx="1e-6" ixy="0" ixz="0" iyy="1e-6" iyz="0" izz="1e-6" />
+    </inertial>
+  </link>
+  
+  
+  <gazebo reference="camera_link">
+  <material>Gazebo/Red</material>
+  
+    <sensor type="camera" name="camera1">
+      <update_rate>30.0</update_rate>
+      <camera name="head">
+        <horizontal_fov>1.3962634</horizontal_fov>
+        <image>
+          <width>800</width>
+          <height>800</height>
+          <format>R8G8B8</format>
+        </image>
+        <clip>
+          <near>0.02</near>
+          <far>300</far>
+        </clip>
+        <noise>
+          <type>gaussian</type>
+          <mean>0.0</mean>
+          <stddev>0.007</stddev>
+        </noise>
+      </camera>
+      <plugin name="camera_controller" filename="libgazebo_ros_camera.so">
+        <alwaysOn>true</alwaysOn>
+        <updateRate>0.0</updateRate>
+        <cameraName>robot/camera1</cameraName>
+        <imageTopicName>image_raw</imageTopicName>
+        <cameraInfoTopicName>camera_info</cameraInfoTopicName>
+        <frameName>camera_link</frameName>
+        <hackBaseline>0.07</hackBaseline>
+        <distortionK1>0.0</distortionK1>
+        <distortionK2>0.0</distortionK2>
+        <distortionK3>0.0</distortionK3>
+        <distortionT1>0.0</distortionT1>
+        <distortionT2>0.0</distortionT2>
+      </plugin>
+    </sensor>
+  </gazebo>
+
+<!--###############################################################################-->
 
 <!--########################## BASE TRANSMISSIONS ############################################-->
 <transmission name="front_left_wheel_trans" type="SimpleTransmission">
@@ -566,33 +742,23 @@
   <gazebo>
     <plugin name="joint_state_publisher" filename="libgazebo_ros_joint_state_publisher.so">
       <jointName>arm_base_joint, shoulder_joint, bottom_wrist_joint, elbow_joint, bottom_wrist_joint</jointName>
+      <updateRate>50.0</updateRate>
     </plugin>
   </gazebo>
 <!--######################################################################-->
-
-<!--######################################################################-->
 <gazebo>
-      <plugin name="diff_drive_controller" filename="libgazebo_ros_diff_drive.so">
-        <legacyMode>false</legacyMode>
-        <alwaysOn>true</alwaysOn>
-        <updateRate>1000.0</updateRate>
-        <leftJoint>front_left_wheel_joint, rear_left_wheel_joint</leftJoint>
-        <rightJoint>front_right_wheel_joint, rear_right_wheel_joint</rightJoint>
-        <wheelSeparation>0.5</wheelSeparation>
-        <wheelDiameter>0.2</wheelDiameter>
-        <wheelTorque>10</wheelTorque>
-        <publishTf>1</publishTf>
-        <odometryFrame>map</odometryFrame>
-        <commandTopic>cmd_vel</commandTopic>
-        <odometryTopic>odom</odometryTopic>
-        <robotBaseFrame>base_link</robotBaseFrame>
-        <wheelAcceleration>2.8</wheelAcceleration>
-        <publishWheelJointState>true</publishWheelJointState>
-        <publishWheelTF>false</publishWheelTF>
-        <odometrySource>world</odometrySource>
-        <rosDebugLevel>Debug</rosDebugLevel>
-      </plugin>
+<plugin name="p3d_base_controller" filename="libgazebo_ros_p3d.so">
+  <alwaysOn>true</alwaysOn>
+  <updateRate>50.0</updateRate>
+  <bodyName>base_link</bodyName>
+  <topicName>base_truth_odom</topicName>
+  <gaussianNoise>0.01</gaussianNoise>
+  <frameName>world</frameName>
+  <xyzOffsets>0 0 0</xyzOffsets>
+  <rpyOffsets>0 0 0</rpyOffsets>
+</plugin>
 </gazebo>
+
 <!--######################################################################-->
 <gazebo reference="front_left_wheel">
  <mu1 value="1.0"/>
