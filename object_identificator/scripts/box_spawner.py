@@ -31,7 +31,7 @@ if __name__ == "__main__":
     for i in range(0,args.number_of_models) : 
         x = random.uniform(-args.x_max/2,args.x_max/2)
         y = random.uniform(-args.y_max/2, args.y_max/2)
-        z = 30
+        z = 0
         item_pose   =   Pose(Point(x,y,z),   orient)
         item_name = "box{0}".format(i)
         spawn_model(item_name, model_xml, "", item_pose, "world")
