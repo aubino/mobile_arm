@@ -6,10 +6,14 @@
     <arg name="world_name" value="$(find mobile_manipulator)/worlds/postoffice.world"/>
   </include>
   
+    <!-- Spawn the camera model -->
+  <param name="camera_description" textfile="$(find mobile_manipulator)/urdf/camera.urdf" />
+  <node name="spawn_camera" pkg="gazebo_ros" type="spawn_model" args="-param camera_description -urdf -x 0 -y 0 -z 30 -model camera" />
+
     <!-- URDF file for the mobile manipulator -->
   <param name="robot_description" textfile="$(find mobile_manipulator)/urdf/mobile_manipulator.urdf" />
-  <!-- Spawn the robot model -->
-  <node name="spawn_urdf" pkg="gazebo_ros" type="spawn_model" args="-param robot_description -urdf -x 0 -y 0 -z 1 -model mobile_manipulator" />
+
+  <node name="spawn_urdf" pkg="gazebo_ros" type="spawn_model" args="-param robot_description -urdf -x 0 -y 0 -z 3 -model mobile_manipulator" />
   
   <!-- Load robotic arm controller and parameters -->
   <rosparam command="load" file="$(find mobile_manipulator_body)/config/arm_control.yaml" />
