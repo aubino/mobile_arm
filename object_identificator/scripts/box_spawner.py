@@ -15,11 +15,11 @@ def parse_cmdline():
                         help='Maximum aeria to spawn in from x coordinates.')
     parser.add_argument('-m', '--model-path', type=str, nargs=None, required=True,
                         help='Set model to spawn path.')
-    return parser.parse_args()
+    return parser.parse_known_args()
 
 
 if __name__ == "__main__":
-    args = parse_cmdline()
+    args,__ = parse_cmdline()
     rospy.init_node("spawn_products_in_bins")
     print("Waiting for gazebo services...")
     rospy.wait_for_service("gazebo/spawn_sdf_model")
