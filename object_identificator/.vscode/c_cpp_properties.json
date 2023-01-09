@@ -1,0 +1,31 @@
+{
+  "configurations": [
+    {
+      "browse": {
+        "databaseFilename": "${default}",
+        "limitSymbolsToIncludedHeaders": false
+      },
+      "includePath": [
+        "/home/aubin/catkin_ws/devel/include/**",
+        "/opt/ros/noetic/include/**",
+        "/home/aubin/catkin_ws/src/Projet_ROS/object_identificator/include/**",
+        "/home/aubin/catkin_ws/src/localisation_outil/romea_dependancies/romea_common-master/romea_common_utils/include/**",
+        "/home/aubin/catkin_ws/src/localisation_outil/romea_dependancies/romea_common/include/**",
+        "/home/aubin/catkin_ws/src/localisation_outil/romea_dependancies/romea_core_rtls/include/**",
+        "/home/aubin/catkin_ws/src/localisation_outil/romea_dependancies/romea_decawave/romea_decawave/include/**",
+        "/home/aubin/catkin_ws/src/localisation_outil/romea_dependancies/romea_rtls-master/romea_rtls_gazebo/include/**",
+        "/home/aubin/catkin_ws/src/localisation_outil/concepts_tests/test_camera/include/**",
+        "/home/aubin/catkin_ws/src/localisation_outil/concepts_tests/test_trilateration/include/**",
+        "/home/aubin/catkin_ws/src/localisation_outil/localisation_module/trilateration/include/**",
+        "/home/aubin/catkin_ws/src/localisation_outil/localisation_module/vision/include/**",
+        "/usr/include/**"
+      ],
+      "name": "ROS",
+      "intelliSenseMode": "gcc-x64",
+      "compilerPath": "/usr/bin/gcc",
+      "cStandard": "gnu11",
+      "cppStandard": "c++14"
+    }
+  ],
+  "version": 4
+}
