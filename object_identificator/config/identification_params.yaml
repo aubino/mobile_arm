@@ -1,0 +1,4 @@
+color_min : [ 128 , 128 , 128]
+color_max : [200 , 200 , 200]
+camera_z : 10
+box_z : 0.1

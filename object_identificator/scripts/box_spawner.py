@@ -27,7 +27,6 @@ if __name__ == "__main__":
     with open(args.model_path, "r") as f:
         model_xml = f.read()
     orient = Quaternion() 
-    #tf.transformations.quaternion_from_euler(0,0,0))
     for i in range(0,args.number_of_models) : 
         x = random.uniform(-args.x_max/2,args.x_max/2)
         y = random.uniform(-args.y_max/2, args.y_max/2)
