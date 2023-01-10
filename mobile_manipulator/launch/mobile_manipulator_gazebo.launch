@@ -8,7 +8,7 @@
   
     <!-- Spawn the camera model -->
   <param name="camera_description" textfile="$(find mobile_manipulator)/urdf/camera.urdf" />
-  <node name="spawn_camera" pkg="gazebo_ros" type="spawn_model" args="-param camera_description -urdf -x 0 -y 0 -z 30 -model camera" />
+  <node name="spawn_camera" pkg="gazebo_ros" type="spawn_model" args="-param camera_description -urdf -x 0 -y 0 -z 40 -model camera" />
 
     <!-- URDF file for the mobile manipulator -->
   <param name="robot_description" textfile="$(find mobile_manipulator)/urdf/mobile_manipulator.urdf" />
