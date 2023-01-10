@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
-import rospy, tf ,cv2
+import rospy, tf2_ros ,cv2,tf2_geometry_msgs
 import numpy as np
 from cv_bridge import CvBridge, CvBridgeError 
 from std_msgs.msg import Header
 from sensor_msgs.msg import CompressedImage,Image,CameraInfo
 from geometry_msgs.msg import PoseArray, Pose,Point, Quaternion
+from geometry_msgs.msg import PoseStamped , Point
 from std_msgs.msg import Int32
 #from IdentifyBox.srv import IdentifyBox, IdentifyBoxResponse
 import numpy as np
@@ -20,8 +21,10 @@ class box_identificator :
         self.img_topic_sub = rospy.Subscriber(img_topic,Image,self.image_callback)
         self.cam_info_topic_sub = rospy.Subscriber(cam_info_topic,CameraInfo,self.cam_info_callback)
         self.box_id_sub = rospy.Subscriber(request_topic,Int32,self.box_identification_topic_routine)
-        self.box_id_pub = rospy.Publisher(rospy.get_namespace()+"/box_location",PoseArray,queue_size=1)
+        self.box_id_pub = rospy.Publisher(rospy.get_namespace()+"box_location",PoseArray,queue_size=1)
         self.cam_info = CameraInfo()
+        self.tfBuffer = tf2_ros.Buffer()
+        self.tf_listener = tf2_ros.TransformListener(self.tfBuffer)
         #self.identification_service = rospy.Service(rospy.get_namespace()+"identify_box",IdentifyBox,self.box_identification_routine)
     
     def image_callback(self, data):
@@ -94,10 +97,21 @@ class box_identificator :
                     square_center3d.append((X,Y,camera_z))
                 except ZeroDivisionError :
                     rospy.logwarn("Contour not closed")
+        
         for i in range(0,min(data.data,len(square_center3d))) : 
-            box_pose = Pose(Point(square_center3d[i][0],square_center3d[i][1],square_center3d[i][2]),Quaternion())
+            box_pose = Pose(Point(-square_center3d[i][1],-square_center3d[i][0],box_z/2),Quaternion(0,0,0,1))
             boxes_poses.poses.append(box_pose)
-        boxes_poses.header.frame_id = self.cam_info.header.frame_id
+            #try:
+               #trans = self.tfBuffer.lookup_transform(self.cam_info.header.frame_id,"world", rospy.Time())
+               #spose = PoseStamped(Header(),box_pose)
+               #spose.header.frame_id=self.cam_info.header.frame_id
+               #spose.header.stamp = rospy.Time.now()
+               #rpose = tf2_geometry_msgs.do_transform_pose(spose,trans)
+               #boxes_poses.poses.append(rpose.pose)
+               #print("trans  = ",trans)
+            #except (tf2_ros.LookupException, tf2_ros.ConnectivityException, tf2_ros.ExtrapolationException):
+                #rospy.logerr("something went wrong in looking transform from world to %s",self.cam_info.header.frame_id) 
+        boxes_poses.header.frame_id = "world"
         boxes_poses.header.stamp = rospy.Time.now()
         self.box_id_pub.publish(boxes_poses)
         #rospy.loginfo("Number of boxes found : %s",len(square_center))
