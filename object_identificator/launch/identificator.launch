@@ -1,6 +1,7 @@
 <?xml version="1.0"?>
 <launch>
     <rosparam command = "load" file="$(find object_identificator)/config/identification_params.yaml" ns = "up_camera"/>
-    <node name="box_spawner" pkg = "object_identificator" type = "box_spawner.py" args="-n 2 -xm 10 -ym 10 -m $(find object_identificator)/sdf/box.sdf" output="screen"/>
+    <node name="box_spawner" pkg = "object_identificator" type = "box_spawner.py" args="-n 2 -xm 30 -ym 30 -m $(find object_identificator)/sdf/box.sdf" output="screen"/>
+    <!--remap from ="/up_camera/box_location" to ="/move_base_simple/goal"/-->
     <node name = "box_identificator" pkg = "object_identificator" type = "box_identificator.py" ns = "up_camera" clear_params="false" output="screen"/>
 </launch>

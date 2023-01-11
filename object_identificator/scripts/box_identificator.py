@@ -7,6 +7,8 @@ from sensor_msgs.msg import CompressedImage,Image,CameraInfo
 from geometry_msgs.msg import PoseArray, Pose,Point, Quaternion
 from geometry_msgs.msg import PoseStamped , Point
 from std_msgs.msg import Int32
+from move_base_msgs.msg import MoveBaseActionGoal ,MoveBaseGoal
+from actionlib_msgs.msg import GoalID
 #from IdentifyBox.srv import IdentifyBox, IdentifyBoxResponse
 import numpy as np
 # the node containing this class has to have the fillowing rosparams loaded 
@@ -17,11 +19,13 @@ import numpy as np
 class box_identificator : 
     def __init__(self,img_topic:str,cam_info_topic:str,request_topic:str):
         self.rgb= np.zeros((480,640,3))
+        self.goal_id = 0
         self.br=CvBridge()
         self.img_topic_sub = rospy.Subscriber(img_topic,Image,self.image_callback)
         self.cam_info_topic_sub = rospy.Subscriber(cam_info_topic,CameraInfo,self.cam_info_callback)
-        self.box_id_sub = rospy.Subscriber(request_topic,Int32,self.box_identification_topic_routine)
-        self.box_id_pub = rospy.Publisher(rospy.get_namespace()+"box_location",PoseArray,queue_size=1)
+        self.box_id_sub = rospy.Subscriber(request_topic,Int32,self.box_identification_topic_routine) 
+        #self.box_id_pub = rospy.Publisher(rospy.get_namespace()+"box_location",PoseStamped,queue_size=1)
+        self.box_id_pub = rospy.Publisher("/move_base/goal",MoveBaseActionGoal,queue_size=1)
         self.cam_info = CameraInfo()
         self.tfBuffer = tf2_ros.Buffer()
         self.tf_listener = tf2_ros.TransformListener(self.tfBuffer)
@@ -99,8 +103,11 @@ class box_identificator :
                     rospy.logwarn("Contour not closed")
         
         for i in range(0,min(data.data,len(square_center3d))) : 
-            box_pose = Pose(Point(-square_center3d[i][1],-square_center3d[i][0],box_z/2),Quaternion(0,0,0,1))
-            boxes_poses.poses.append(box_pose)
+            box_pose = PoseStamped(Header(0,rospy.Time.now(),"map"),Pose(Point(-square_center3d[i][1],-square_center3d[i][0],box_z/2),Quaternion(0,0,0,1)))
+            goal = MoveBaseActionGoal(box_pose.header,GoalID(rospy.Time.now(),str(self.goal_id)),MoveBaseGoal(box_pose))
+            self.box_id_pub.publish(goal)
+            self.goal_id = self.goal_id+1
+            #boxes_poses.poses.append(box_pose)
             #try:
                #trans = self.tfBuffer.lookup_transform(self.cam_info.header.frame_id,"world", rospy.Time())
                #spose = PoseStamped(Header(),box_pose)
@@ -111,9 +118,9 @@ class box_identificator :
                #print("trans  = ",trans)
             #except (tf2_ros.LookupException, tf2_ros.ConnectivityException, tf2_ros.ExtrapolationException):
                 #rospy.logerr("something went wrong in looking transform from world to %s",self.cam_info.header.frame_id) 
-        boxes_poses.header.frame_id = "world"
-        boxes_poses.header.stamp = rospy.Time.now()
-        self.box_id_pub.publish(boxes_poses)
+        #boxes_poses.header.frame_id = "world"
+        #boxes_poses.header.stamp = rospy.Time.now()
+        #self.box_id_pub.publish(boxes_poses)
         #rospy.loginfo("Number of boxes found : %s",len(square_center))
 
 if __name__ == "__main__":
