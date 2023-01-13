@@ -14,7 +14,8 @@ map_topic: /map
 global_frame: map
 
 # Base frame of the robot
-robot_base_frame: base_link
+#robot_base_frame: base_link
+robot_base_frame: base_footprint
 
 # Frequency in Hz for the costmap to be updated
 update_frequency: 5.0
@@ -44,7 +45,7 @@ plugins:
 # Map layer built with SLAM
 static_layer:
   map_topic: /map
-  subscribe_to_updates: false
+  subscribe_to_updates: true
 
 # Map layer that contains information about the obstacles in the environment as detected by LIDAR
 obstacle_layer:

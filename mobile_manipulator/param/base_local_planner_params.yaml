@@ -1,9 +1,27 @@
 controller_frequency: 5.0
+
+recovery_behaviors:
+  - name: rotate_recovery
+    type: rotate_recovery/RotateRecovery
+  - name: clear_costmap_recovery
+    type: clear_costmap_recovery/ClearCostmapRecovery
+
+recovery_enabled: true
+recovery_patience: 15.0
+
 TrajectoryPlannerROS:
   holonomic_robot: false
   meter_scoring: true
   max_vel_x: 0.45
-  min_vel_x: -0.45
+  min_vel_x: 0.1
   
-  xy_goal_tolerance: 2.0
-  yaw_goal_tolerance: 3.14159
+  xy_goal_tolerance: 0.5
+  yaw_goal_tolerance: 0.5
+  latch_xy_goal_tolerance: false
+  
+  #meter_scoring: true
+  #occdist_scale:  0.1 #The weighting for how much the controller should attempt to avoid obstacles. default 0.01
+  #pdist_scale: 0.75  #     The weighting for how much the controller should stay close to the path it was given . default 0.6
+  #gdist_scale: 1.0 #     The weighting for how much the controller should attempt to reach its local goal, also controls speed  default 0.8
+  
+  escape_vel: -0.3

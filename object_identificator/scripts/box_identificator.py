@@ -5,7 +5,7 @@ from cv_bridge import CvBridge, CvBridgeError
 from std_msgs.msg import Header
 from sensor_msgs.msg import CompressedImage,Image,CameraInfo
 from geometry_msgs.msg import PoseArray, Pose,Point, Quaternion
-from std_msgs.msg import Int32
+from std_msgs.msg import Int8
 #from IdentifyBox.srv import IdentifyBox, IdentifyBoxResponse
 import numpy as np
 # the node containing this class has to have the fillowing rosparams loaded 
@@ -19,8 +19,8 @@ class box_identificator :
         self.br=CvBridge()
         self.img_topic_sub = rospy.Subscriber(img_topic,Image,self.image_callback)
         self.cam_info_topic_sub = rospy.Subscriber(cam_info_topic,CameraInfo,self.cam_info_callback)
-        self.box_id_sub = rospy.Subscriber(request_topic,Int32,self.box_identification_topic_routine)
-        self.box_id_pub = rospy.Publisher(rospy.get_namespace()+"/box_location",PoseArray,queue_size=1)
+        self.box_id_sub = rospy.Subscriber(request_topic,Int8,self.box_identification_topic_routine)
+        self.box_id_pub = rospy.Publisher(rospy.get_namespace()+"box_location",PoseArray,queue_size=1)
         self.cam_info = CameraInfo()
         #self.identification_service = rospy.Service(rospy.get_namespace()+"identify_box",IdentifyBox,self.box_identification_routine)
     
