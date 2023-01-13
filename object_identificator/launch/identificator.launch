@@ -1,18 +1,7 @@
 <?xml version="1.0"?>
 <launch>
-
-	  <!-- Gazebo post office environment -->
-  <include file="$(find gazebo_ros)/launch/empty_world_custom.launch">
-    <arg name="world_name" value="$(find mobile_manipulator)/worlds/postoffice.world"/>
-  </include>
     <rosparam command = "load" file="$(find object_identificator)/config/identification_params.yaml" ns = "up_camera"/>
-    
-    <node name="box_spawner" pkg = "object_identificator" type = "box_spawner.py" args="-n 2 -xm 20 -ym 20 -m $(find object_identificator)/sdf/box.sdf" output="screen"/>
-    
+    <node name="box_spawner" pkg = "object_identificator" type = "box_spawner.py" args="-n 2 -xm 30 -ym 30 -m $(find object_identificator)/sdf/box.sdf" output="screen"/>
+    <!--remap from ="/up_camera/box_location" to ="/move_base_simple/goal"/-->
     <node name = "box_identificator" pkg = "object_identificator" type = "box_identificator.py" ns = "up_camera" clear_params="false" output="screen"/>
-   
-  <!-- Spawn the camera model -->
-  <param name="camera_description" textfile="$(find mobile_manipulator)/urdf/camera.urdf" />
-  <node name="spawn_camera" pkg="gazebo_ros" type="spawn_model" args="-param camera_description -urdf -x 0 -y 0 -z 30 -model camera" />
-  
 </launch>

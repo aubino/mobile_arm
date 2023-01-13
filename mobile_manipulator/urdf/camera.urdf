@@ -29,7 +29,7 @@
     <joint name="up_camera_joint" type="fixed">
         <parent link="world"/>
         <child link="up_camera_link"/>
-        <origin xyz="0 0 0" rpy="0 1.57 0"/>
+        <origin xyz="0 0 0" rpy="0 1.5707 0"/>
     </joint>
     
     

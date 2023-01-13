@@ -4,8 +4,8 @@
   <!-- Transformation Configuration ... Setting Up the Relationships Between Coordinate Frames -->
   
   <node pkg="tf2_ros" type="static_transform_publisher" name="world_to_map" args="0 0 0 0 0 0 world map"/>
-
-  <node pkg="tf2_ros" type="static_transform_publisher" name="base_link_broadcaster" args="0 0 0.05 0 0 0 base_footprint base_link" />
+  <node pkg="tf2_ros" type="static_transform_publisher" name="world_to_up_camera" args="0 0 40 0 1.5707 0 world up_camera_link"/>
+  <node pkg="tf2_ros" type="static_transform_publisher" name="base_link_broadcaster" args="0 0 0.05 0 0 0 base_footprint base_link"/>
   <!--node pkg="tf2_ros" type="static_transform_publisher" name="map_odom_broadcaster" args="0 0 0 0 0 0 map odom" /-->
   <!--node pkg="tf2_ros" type="static_transform_publisher" name="odom_to_robot" args="0 0 0 0 0 0 odom base_footprint" /-->
   <!-- Launch RViz -->
