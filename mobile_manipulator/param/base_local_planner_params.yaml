@@ -13,10 +13,10 @@ TrajectoryPlannerROS:
   holonomic_robot: false
   meter_scoring: true
   max_vel_x: 0.45
-  min_vel_x: 0.1
+  min_vel_x: -0.45
   
   xy_goal_tolerance: 0.5
-  yaw_goal_tolerance: 0.5
+  yaw_goal_tolerance: 1.57
   latch_xy_goal_tolerance: false
   
   #meter_scoring: true
